@@ -1,0 +1,26 @@
+version: '3.5'
+services:
+  flask:
+    build: .
+    command: gunicorn -b 0.0.0.0:5000 src.example.app:app --reload
+    environment:
+      - FLASK_APP=src/example/app.py
+      - FLASK_DEBUG=1
+      - PYTHONUNBUFFERED=True
+    ports:
+      - published: 5000
+        target: 5000
+    volumes:
+      - ./:/root
+  database:
+    container_name: postgres
+    image: postgres:latest
+    env_file: database.conf
+    ports:
+      - published: 5432
+        target: 5432
+    volumes:
+      - db_volume:/var/lib/postgresql
+
+volumes:
+  db_volume:
