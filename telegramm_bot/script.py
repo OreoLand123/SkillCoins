@@ -2,7 +2,7 @@
 import os.path
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
-
+from datetime import datetime
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -66,6 +66,7 @@ def cheak_user_from(acc_id, acc_login):
         else:
             return "0"
 
+
 def get_balans_user(acc_id):
     accounts = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Аккаунты").execute()["values"][2:]
     for i in accounts:
@@ -76,7 +77,6 @@ def get_balans_user(acc_id):
                 return int(i[2])
 
 
-
 def sorted_list_of_awards():
     reasons = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME).execute()["values"][2:]
     json_dict = dict()
@@ -85,3 +85,30 @@ def sorted_list_of_awards():
             continue
         json_dict[i[3]] = int(i[4][1:])
     return json_dict
+
+
+def make_purchase(acc_id, purchase_sum):
+    accounts = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Аккаунты").execute()["values"][2:]
+    reasons = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME).execute()["values"][2:]
+    past_logs = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Логи").execute()["values"][2:]
+    json_dict = {}
+    for i in reasons:
+        json_dict[i[3]] = i[4][1:]
+    json_dict
+    acc_id = "537932720"
+    reason = "Получи 55% скидку на любой новый курс"
+    for acc in accounts:
+        if acc_id == acc[1]:
+            name = acc[0]
+            break
+    log = [[name, reason, -json_dict[reason], str(datetime.today()).split(".")[0]]]
+
+    logs = service.spreadsheets().values().batchUpdate(spreadsheetId=SAMPLE_SPREADSHEET_ID, body={
+        "valueInputOption": "USER_ENTERED",
+        "data": [
+            {"range": f"Логи!A{len(past_logs) + 3}:D100",
+            "majorDimension": "ROWS",    
+            "values": log}
+        ]
+    }).execute()
+    return log

@@ -1,6 +1,6 @@
 from create_bot import bot
 import keyboard
-from script import get_coins_info, buy_info, cheak_user_from, get_balans_user, sorted_list_of_awards
+from script import get_coins_info, buy_info, cheak_user_from, get_balans_user, sorted_list_of_awards, make_purchase
 
 
 async def send_message_start(message):
@@ -31,7 +31,7 @@ async def send_message_buy_info(message):
 
 async def call_back(callback_query):
     cheak_ballans = get_balans_user(str(callback_query.message.chat.id))
-    if cheak_ballans > int(callback_query.message.text.split(" : ")[1]):
+    if cheak_ballans >= int(callback_query.message.text.split(" : ")[1]):
         await bot.send_message(callback_query.message.chat.id, f"Вы точно хотите потратить?", reply_markup=keyboard.kb_mark_4)
     else:
         await bot.send_message(callback_query.message.chat.id, "Недостаточно средств", reply_markup=keyboard.kb_mark)
@@ -42,7 +42,8 @@ async def send_message_back(message):
 
 
 async def send_message_yes(message):
-    await bot.send_message(message.from_user.id, "Оплата прошла успешно", reply_markup=keyboard.kb_mark)
+    await bot.send_message(message.from_user.id, f"Оплата прошла успешно", reply_markup=keyboard.kb_mark)
+    
 
 
 def register_handlers(dp):
