@@ -1,28 +1,10 @@
-
-import os.path
-from googleapiclient.discovery import build
-from google.oauth2 import service_account
+import sys
+sys.path.insert(0, "..")
+from SkillCoins.functions import read_data, write_data, write_id
 from datetime import datetime
 
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SERVICE_ACCOUNT_FILE = os.path.join(BASE_DIR, 'local-talent-364913-0febf38e0456.json')
-
-credentials = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE, scopes=SCOPES)
-
-# The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1oYSVwlNr2NZSB6i2pNHyKN0aW34Y50jldQgEKHUJiVw'
-SAMPLE_RANGE_NAME = 'Причины'
-SAMPLE_RANGE_NAME_ID = "Аккаунты"
-
-service = build('sheets', 'v4', credentials=credentials)
-
-sheet = service.spreadsheets()
-
-
 def get_coins_info():
-        reasons = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME).execute()["values"][2:]
+        reasons = read_data("Причины")
         json_dict = dict()
         for i in reasons:
             if i[0] == '':
@@ -31,7 +13,7 @@ def get_coins_info():
         return json_dict
 
 def check_user_from(acc_id, acc_login):
-    accounts = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Аккаунты").execute()["values"][2:]
+    accounts = read_data("Аккаунты")
     accounts_id = []
     accounts_logins = []
     for i in accounts:
@@ -44,15 +26,7 @@ def check_user_from(acc_id, acc_login):
         return True
     else:
         if acc_login in accounts_logins:
-            row_num = accounts_logins.index(acc_login) + 3
-            service.spreadsheets().values().batchUpdate(spreadsheetId=SAMPLE_SPREADSHEET_ID, body={
-                "valueInputOption": "USER_ENTERED",
-                "data": [
-                    {"range": f"Аккаунты!B{row_num}",
-                     "majorDimension": "ROWS",
-                     "values": [[acc_id]]}
-                ]
-            }).execute()
+            write_id(acc_id, acc_login, accounts_logins)
             return True
         else:
             return False
@@ -66,7 +40,7 @@ def check_user_id(acc_id, acc_login, ID):
     return False
 
 def get_balans_user(acc_id):
-    accounts = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Аккаунты").execute()["values"][2:]
+    accounts = read_data("Аккаунты")
     for i in accounts:
         if acc_id == i[1]:
             if i[2] == "" or i[2] == "0":
@@ -75,7 +49,7 @@ def get_balans_user(acc_id):
                 return int(i[2])
 
 def get_list_of_awards():
-    reasons = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME).execute()["values"][2:]
+    reasons = read_data("Причины")
     json_dict = dict()
     for i in reasons:
         if i[0] == '':
@@ -84,20 +58,11 @@ def get_list_of_awards():
     return json_dict
 
 def make_purchase(acc_id, reason, purchase_sum):
-    accounts = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Аккаунты").execute()["values"][2:]
-    past_logs = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Логи").execute()["values"][2:]
-    name = None
+    accounts = read_data("Аккаунты")
+    past_logs = read_data("Логи")
     for acc in accounts:
         if acc_id == acc[1]:
             name = acc[0]
             break
     log = [[name, reason, purchase_sum, str(datetime.today()).split(".")[0]]]
-
-    service.spreadsheets().values().batchUpdate(spreadsheetId=SAMPLE_SPREADSHEET_ID, body={
-        "valueInputOption": "USER_ENTERED",
-        "data": [
-            {"range": f"Логи!A{len(past_logs) + 3}:D100",
-            "majorDimension": "ROWS",
-            "values": log}
-        ]
-    }).execute()
+    write_data("Логи", log, from_top=False)

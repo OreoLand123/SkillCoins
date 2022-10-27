@@ -9,7 +9,7 @@ async def send_message_start(message):
     if not check_user_id(str(message.from_user.id), message.from_user.username, ID):
         await bot.send_message(message.from_user.id, "Ты кто?", reply_markup=keyboard.kb_mark_5)
     else:
-        await bot.send_message(message.from_user.id, "Привет я TelegramBot", reply_markup=keyboard.kb_mark)
+        await bot.send_message(message.from_user.id, f"Привет я TelegramBot", reply_markup=keyboard.kb_mark)
 
 async def send_message_balans(message):
     if str(message.from_user.id) in ID:
@@ -49,7 +49,7 @@ async def send_message_back(message, state: FSMContext):
 async def send_message_yes(message, state: FSMContext):
     if str(message.from_user.id) in ID:
         async with state.proxy() as data:
-            make_purchase(acc_id=str(message.chat.id), reason=data['reson'][0], purchase_sum=-int(data['reson'][1]))
+            make_purchase(acc_id=str(message.chat.id), reason=data['reason'][0], purchase_sum=-int(data['reason'][1]))
             await bot.send_message(message.from_user.id, f"Оплата прошла успешно", reply_markup=keyboard.kb_mark)
         await state.finish()
 
@@ -59,6 +59,6 @@ def register_handlers(dp):
     dp.register_message_handler(send_message_balans, lambda message: "баланс" in message.text.lower() and str(message.from_user.id) in ID, state=None)
     dp.register_message_handler(send_message_get, lambda message: "как заработать" in message.text.lower() and str(message.from_user.id) in ID, state=None)
     dp.register_message_handler(send_message_buy_info, lambda message: "потратить" in message.text.lower() and str(message.from_user.id) in ID, state=None)
-    dp.register_message_handler(send_message_back, lambda message: "на главную" in message.text.lower() and str(message.from_user.id) in ID, state=FSMAdmin.reson)
-    dp.register_callback_query_handler(call_back, lambda callback: callback.data == "bt1", state=FSMAdmin.reson)
-    dp.register_message_handler(send_message_yes, lambda message: "да" in message.text.lower() and str(message.from_user.id) in ID, state=FSMAdmin.reson)
+    dp.register_message_handler(send_message_back, lambda message: "на главную" in message.text.lower() and str(message.from_user.id) in ID, state=FSMAdmin.reason)
+    dp.register_callback_query_handler(call_back, lambda callback: callback.data == "bt1", state=FSMAdmin.reason)
+    dp.register_message_handler(send_message_yes, lambda message: "да" in message.text.lower() and str(message.from_user.id) in ID, state=FSMAdmin.reason)
