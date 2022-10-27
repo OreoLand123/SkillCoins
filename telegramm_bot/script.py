@@ -30,16 +30,7 @@ def get_coins_info():
             json_dict[i[0]] = i[1]
         return json_dict
 
-
-def buy_info():
-    reasons = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME).execute()["values"][2:]
-    json_dict = dict()
-    for i in reasons:
-        json_dict[i[3]] = i[4][1:]
-    return json_dict
-
-
-def cheak_user_from(acc_id, acc_login):
+def check_user_from(acc_id, acc_login):
     accounts = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Аккаунты").execute()["values"][2:]
     accounts_id = []
     accounts_logins = []
@@ -50,11 +41,11 @@ def cheak_user_from(acc_id, acc_login):
             accounts_logins.append("0")
         accounts_id.append(i[1])
     if acc_id in accounts_id:
-        return "1"
+        return True
     else:
         if acc_login in accounts_logins:
             row_num = accounts_logins.index(acc_login) + 3
-            results = service.spreadsheets().values().batchUpdate(spreadsheetId=SAMPLE_SPREADSHEET_ID, body={
+            service.spreadsheets().values().batchUpdate(spreadsheetId=SAMPLE_SPREADSHEET_ID, body={
                 "valueInputOption": "USER_ENTERED",
                 "data": [
                     {"range": f"Аккаунты!B{row_num}",
@@ -62,10 +53,17 @@ def cheak_user_from(acc_id, acc_login):
                      "values": [[acc_id]]}
                 ]
             }).execute()
-            return "1"
+            return True
         else:
-            return "0"
+            return False
 
+def check_user_id(acc_id, acc_login, ID):
+    if acc_id in ID:
+        return True
+    if check_user_from(acc_id, acc_login):
+        ID.append(acc_id)
+        return True
+    return False
 
 def get_balans_user(acc_id):
     accounts = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Аккаунты").execute()["values"][2:]
@@ -76,8 +74,7 @@ def get_balans_user(acc_id):
             else:
                 return int(i[2])
 
-
-def sorted_list_of_awards():
+def get_list_of_awards():
     reasons = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME).execute()["values"][2:]
     json_dict = dict()
     for i in reasons:
@@ -86,21 +83,21 @@ def sorted_list_of_awards():
         json_dict[i[3]] = int(i[4][1:])
     return json_dict
 
-
 def make_purchase(acc_id, reason, purchase_sum):
     accounts = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Аккаунты").execute()["values"][2:]
     past_logs = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range="Логи").execute()["values"][2:]
+    name = None
     for acc in accounts:
         if acc_id == acc[1]:
             name = acc[0]
             break
     log = [[name, reason, purchase_sum, str(datetime.today()).split(".")[0]]]
 
-    logs = service.spreadsheets().values().batchUpdate(spreadsheetId=SAMPLE_SPREADSHEET_ID, body={
+    service.spreadsheets().values().batchUpdate(spreadsheetId=SAMPLE_SPREADSHEET_ID, body={
         "valueInputOption": "USER_ENTERED",
         "data": [
             {"range": f"Логи!A{len(past_logs) + 3}:D100",
-            "majorDimension": "ROWS",    
+            "majorDimension": "ROWS",
             "values": log}
         ]
     }).execute()

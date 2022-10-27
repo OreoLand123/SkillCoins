@@ -1,5 +1,5 @@
-from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters.state import State, StatesGroup
 
-class FSMPurchase(StatesGroup):
+class FSMAdmin(StatesGroup):
     reason = State()

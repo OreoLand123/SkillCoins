@@ -2,7 +2,6 @@ from aiogram import *
 from create_bot import dp
 from handlers import register_handlers
 
-
 register_handlers(dp)
 
 
