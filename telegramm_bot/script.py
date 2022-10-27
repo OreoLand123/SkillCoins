@@ -1,7 +1,7 @@
 import sys
-import os.path
-sys.path.insert(0, os.path.abspath("../"))
-from SkillCoins.functions import read_data, write_data, write_id
+import os
+sys.path.insert(1, os.path.join(sys.path[0], ".."))
+from functions import read_data, write_data, write_id
 from datetime import datetime
 
 def get_coins_info():
