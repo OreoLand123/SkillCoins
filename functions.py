@@ -39,12 +39,12 @@ def write_data(sheet_name, data, sheet_data=None, from_top=False):
             ]
         }).execute()
 
-def write_id(acc_id, acc_login, accounts_logins):
+def write_id(acc_id, acc_login, accounts_logins, sheet_name='Аккаунты'):
     row_num = accounts_logins.index(acc_login) + 3
     service.spreadsheets().values().batchUpdate(spreadsheetId=SAMPLE_SPREADSHEET_ID, body={
         "valueInputOption": "USER_ENTERED",
         "data": [
-            {"range": f"Аккаунты!B{row_num}",
+            {"range": f"{sheet_name}!B{row_num}",
             "majorDimension": "ROWS",
             "values": [[acc_id]]}
         ]

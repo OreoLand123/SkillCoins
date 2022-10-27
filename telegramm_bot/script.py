@@ -1,5 +1,6 @@
 import sys
-sys.path.insert(0, "..")
+import os.path
+sys.path.insert(0, os.path.abspath("../"))
 from SkillCoins.functions import read_data, write_data, write_id
 from datetime import datetime
 
@@ -15,6 +16,7 @@ def get_coins_info():
 def check_user_from(acc_id, acc_login):
     accounts = read_data("Аккаунты")
     accounts_id = []
+    accounts_names = []
     accounts_logins = []
     for i in accounts:
         try:
@@ -22,20 +24,24 @@ def check_user_from(acc_id, acc_login):
         except IndexError:
             accounts_logins.append("0")
         accounts_id.append(i[1])
+        accounts_names.append(i[0])
     if acc_id in accounts_id:
-        return True
+        idx = accounts_id.index(acc_id)
+        return accounts_names[idx]
     else:
         if acc_login in accounts_logins:
             write_id(acc_id, acc_login, accounts_logins)
-            return True
+            idx = accounts_logins.index(acc_login)
+            return accounts_names[idx]
         else:
-            return False
+            return None
 
 def check_user_id(acc_id, acc_login, ID):
     if acc_id in ID:
         return True
-    if check_user_from(acc_id, acc_login):
-        ID.append(acc_id)
+    user_name = check_user_from(acc_id, acc_login)
+    if user_name:
+        ID[int(acc_id)] = user_name
         return True
     return False
 
@@ -65,4 +71,16 @@ def make_purchase(acc_id, reason, purchase_sum):
             name = acc[0]
             break
     log = [[name, reason, purchase_sum, str(datetime.today()).split(".")[0]]]
-    write_data("Логи", log, from_top=False)
+    write_data("Логи", data=log, sheet_data=past_logs, from_top=False)
+
+def check_admin(acc_id, acc_log):
+    admins = read_data("Администраторы")
+    id_list = [admin[1] for admin in admins]
+    if acc_id in id_list:
+        return True
+    logins_list = [admin[2] for admin in admins]
+    if acc_log in logins_list:
+        write_id(acc_id, acc_log, logins_list, sheet_name="Администраторы")
+        return True
+    return False
+    

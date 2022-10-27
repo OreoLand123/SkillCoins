@@ -1,19 +1,28 @@
 from create_bot import bot
 import keyboard
-from script import get_coins_info, get_balance_user, get_list_of_awards, make_purchase, check_user_id
+from script import get_coins_info, get_balance_user, get_list_of_awards, make_purchase, check_user_id, check_admin
 from States import FSMAdmin, FSMContext
+from text import texts
 
-ID = []
+ID = {}
+admin_ID = None
+admin_login = None
 
 async def send_message_start(message):
-    if not check_user_id(str(message.from_user.id), message.from_user.username, ID):
-        await bot.send_message(message.from_user.id, "Ты кто?", reply_markup=keyboard.kb_mark_5)
+    global admin_ID
+    global admin_login
+    if check_admin(str(message.from_user.id), message.from_user.username):
+        admin_ID = message.from_user.id
+        admin_login = message.from_user.username
+        await bot.send_message(message.from_user.id, f"Слушаю, мой повелитель")
+    elif not check_user_id(str(message.from_user.id), message.from_user.username, ID):
+        await bot.send_message(message.from_user.id, f"Привет, я Бот.\nНапиши @{admin_login}", reply_markup=keyboard.kb_mark_5)
     else:
-        await bot.send_message(message.from_user.id, f"Привет я TelegramBot", reply_markup=keyboard.kb_mark)
+        await bot.send_message(message.from_user.id, texts["hello"].format(ID[message.from_user.id].split(' ')[1]), reply_markup=keyboard.kb_mark)
 
 async def send_message_balance(message):
     if check_user_id(str(message.from_user.id), message.from_user.username, ID):
-        await bot.send_message(message.from_user.id, f"Баланс: {get_balance_user(str(message.from_user.id))} ", reply_markup=keyboard.kb_mark)
+        await bot.send_message(message.from_user.id, f"Баланс: {get_balance_user(str(message.from_user.id))}", reply_markup=keyboard.kb_mark)
 
 async def send_message_get(message):
     if check_user_id(str(message.from_user.id), message.from_user.username, ID):
@@ -51,7 +60,9 @@ async def send_message_yes(message, state: FSMContext):
         async with state.proxy() as data:
             make_purchase(acc_id=str(message.chat.id), reason=data['reason'][0], purchase_sum=-int(data['reason'][1]))
             await bot.send_message(message.from_user.id, f"Оплата прошла успешно", reply_markup=keyboard.kb_mark)
+        await bot.send_message(admin_ID, f"{ID[message.chat.id]} потратил(а) на {data['reason'][0]} {int(data['reason'][1])} SkillCoins")
         await state.finish()
+        
 
 
 def register_handlers(dp):

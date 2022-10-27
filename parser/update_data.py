@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, "..")
+sys.path.insert(0, os.path.abspath(".."))
 from SkillCoins.functions import read_data, write_data, clear_logs, clear_rates
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
