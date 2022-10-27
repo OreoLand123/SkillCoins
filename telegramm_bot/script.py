@@ -39,7 +39,7 @@ def check_user_id(acc_id, acc_login, ID):
         return True
     return False
 
-def get_balans_user(acc_id):
+def get_balance_user(acc_id):
     accounts = read_data("Аккаунты")
     for i in accounts:
         if acc_id == i[1]:
