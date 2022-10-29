@@ -26,9 +26,8 @@ async def send_message_start(message):
 async def send_message_balance(message):
     if check_user_id(str(message.from_user.id), message.from_user.username, ID):
         balance = get_balance_user(str(message.from_user.id))
-        if balance == 0:
-            mes = texts["balans_0"]
-        await bot.send_message(message.from_user.id, random.choice(texts["balans"]).format(get_balance_user(str(message.from_user.id))), reply_markup=keyboard.kb_mark)
+        mes = texts["balance_0"] if balance == 0 else texts["balance"]
+        await bot.send_message(message.from_user.id, random.choice(mes).format(get_balance_user(str(message.from_user.id))), reply_markup=keyboard.kb_mark)
     else:
         await bot.send_message(message.from_user.id, random.choice(texts["dont_bd_user"]).format(admin_login))
 

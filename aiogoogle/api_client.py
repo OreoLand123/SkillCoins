@@ -3,14 +3,24 @@ from google.oauth2 import service_account
 import google_auth_httplib2
 import httplib2
 
-import os
 import json
 from aiogoogle import Aiogoogle
 from aiogoogle.auth.creds import ServiceAccountCreds
 
+"""
+This client includes both Google synchronous and AIOGoogle asyncronous methods.
+loadasyncsheetservice and GetValuesAsync provide the basics for getting AIOGoogle working to read Google sheets.
+To use this client add the following lines to your main python script:
 import api_client
-api_client.InitializeClient(os.path.join('..', 'resources', 'local-talent-364913-0febf38e0456.json'))
-
+api_client.InitializeClient(os.path.join('..', 'resources', 'credentials_service.json'))
+await api_client.InitializeClientAsync(os.path.join('..', 'resources', 'credentials_service.json'))
+Add the following lines to your other python files:
+import api_client
+values = await api_client.GetClientAsync().GetValuesAsync(MASTER_SPREADSHEET_ID, ADMINS_RANGE_NAME)
+or
+req = api_client.GetClientAsync()._spreadsheetAsync.values.batchUpdate(spreadsheetId=spreadsheetid, json=body)
+await api_client.GetClientAsync()._aiogoogle.as_service_account(req)
+"""
 
 
 class Sheet:
@@ -150,7 +160,7 @@ class SheetApiClient:
 defaultClient = None
 
 
-defaultClientAsync = api_client.InitializeClientAsync(os.path.join('..', 'resources', 'local-talent-364913-0febf38e0456.json'))
+defaultClientAsync = None
 
 
 def InitializeClient(serviceAccountFile):
@@ -164,10 +174,11 @@ async def InitializeClientAsync(serviceAccountFile):
     global defaultClientAsync
     if defaultClient is None:
         defaultClient = SheetApiClient(serviceAccountFile)
-    
+    print(defaultClient)
     if defaultClientAsync is None:
+        print("Ok")
         defaultClientAsync = await defaultClient.loadasyncsheetservice(serviceAccountFile)
-        
+    print(defaultClientAsync)   
     return defaultClientAsync
 
 
