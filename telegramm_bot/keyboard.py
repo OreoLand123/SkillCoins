@@ -1,13 +1,13 @@
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
 
 
-button_balance = KeyboardButton("Баланс")
+button_balance = KeyboardButton("Баланс 💳")
 button_get = KeyboardButton("Как заработать?")
-button_buy = KeyboardButton("Потратить")
-button_back = KeyboardButton("На главную")
-button_get_parser = InlineKeyboardButton("потратить", callback_data="bt1")
-button_yes = KeyboardButton("Да")
-batton_help = KeyboardButton("Я никто")
+button_buy = KeyboardButton("Потратить 💸")
+button_back = KeyboardButton("На главную 🏠")
+button_get_parser = InlineKeyboardButton("потратить 💎", callback_data="bt1")
+button_yes = KeyboardButton("Да ✅")
+batton_help = KeyboardButton("/start")
 
 
 kb_mark = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
