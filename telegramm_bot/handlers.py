@@ -26,8 +26,9 @@ async def send_message_start(message):
 async def send_message_balance(message):
     if check_user_id(str(message.from_user.id), message.from_user.username, ID):
         balance = get_balance_user(str(message.from_user.id))
-        mes = texts["balance_0"] if balance == 0 else texts["balance"]
-        await bot.send_message(message.from_user.id, random.choice(mes).format(balance), reply_markup=keyboard.kb_mark)
+        if balance == 0:
+            mes = texts["balans_0"]
+        await bot.send_message(message.from_user.id, random.choice(texts["balans"]).format(get_balance_user(str(message.from_user.id))), reply_markup=keyboard.kb_mark)
     else:
         await bot.send_message(message.from_user.id, random.choice(texts["dont_bd_user"]).format(admin_login))
 
@@ -63,7 +64,7 @@ async def call_back(callback_query, state: FSMContext):
 
 async def send_message_back(message, state: FSMContext):
     if check_user_id(str(message.from_user.id), message.from_user.username, ID):
-        await bot.send_message(message.from_user.id, "Выбери одно из предложенных действий👇🏻", reply_markup=keyboard.kb_mark)
+        await bot.send_message(message.from_user.id, "На главную", reply_markup=keyboard.kb_mark)
         await state.finish()
     else:
         await bot.send_message(message.from_user.id, random.choice(texts["dont_bd_user"]).format(admin_login))
@@ -72,7 +73,7 @@ async def send_message_yes(message, state: FSMContext):
     if check_user_id(str(message.from_user.id), message.from_user.username, ID):
         async with state.proxy() as data:
             make_purchase(acc_id=str(message.chat.id), reason=data['reason'][0], purchase_sum=-int(data['reason'][1]))
-            await bot.send_message(message.from_user.id, f"Оплата прошла успешно!", reply_markup=keyboard.kb_mark)
+            await bot.send_message(message.from_user.id, f"Оплата прошла успешно", reply_markup=keyboard.kb_mark)
             await state.finish()
         if admin_ID != None and admin_login != None:
             await bot.send_message(admin_ID, random.choice(texts["message_admin"]).format(f"{ID[message.chat.id]} потратил(а) на {data['reason'][0]} {int(data['reason'][1])} SkillCoins"))

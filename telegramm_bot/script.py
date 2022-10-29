@@ -5,13 +5,13 @@ from functions import read_data, write_data, write_id
 from datetime import datetime
 
 def get_coins_info():
-        reasons = read_data("Причины")
-        json_dict = dict()
-        for i in reasons:
-            if i[0] == '':
-                continue
-            json_dict[i[0]] = i[1]
-        return json_dict
+    reasons = read_data("Причины")
+    json_dict = dict()
+    for i in reasons:
+        if i[0] == '':
+            continue
+        json_dict[i[0]] = i[1]
+    return json_dict
 
 def check_user_from(acc_id, acc_login):
     accounts = read_data("Аккаунты")
