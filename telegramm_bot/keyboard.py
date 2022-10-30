@@ -8,6 +8,7 @@ button_back = KeyboardButton("На главную 🏠")
 button_get_parser = InlineKeyboardButton("потратить 💎", callback_data="bt1")
 button_yes = KeyboardButton("Да ✅")
 batton_help = KeyboardButton("/start")
+button_update = KeyboardButton("Обновить логи")
 
 
 kb_mark = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
@@ -24,3 +25,6 @@ kb_mark_4.row(button_yes, button_back)
 
 kb_mark_5 = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 kb_mark_5.row(batton_help)
+
+kb_mark_6 = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+kb_mark_6.row(button_update)

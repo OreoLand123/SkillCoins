@@ -174,11 +174,8 @@ async def InitializeClientAsync(serviceAccountFile):
     global defaultClientAsync
     if defaultClient is None:
         defaultClient = SheetApiClient(serviceAccountFile)
-    print(defaultClient)
     if defaultClientAsync is None:
-        print("Ok")
         defaultClientAsync = await defaultClient.loadasyncsheetservice(serviceAccountFile)
-    print(defaultClientAsync)   
     return defaultClientAsync
 
 
