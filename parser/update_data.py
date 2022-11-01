@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.insert(1, os.path.join(sys.path[0], ".."))
-from functions import read_data, write_data, clear_logs, clear_rates, loop
+from functions import read_data, write_data, clear_logs, clear_rates
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 import pandas as pd
@@ -60,6 +60,7 @@ async def main():
     else:
         past_logs_df = pd.DataFrame(columns=['student', 'reason', 'amount', 'date'])
 
+    past_logs_df = past_logs_df[past_logs_df.amount > 0]
 
     groups_past_logs = past_logs_df.groupby([past_logs_df.student, past_logs_df.reason, past_logs_df.amount], as_index=False).date.count()
     groups_logs = logs_df.groupby([logs_df.student, logs_df.reason, logs_df.amount], as_index=False).date.count()
@@ -96,7 +97,4 @@ async def main():
     if not logs_to_add.empty:
         l = [i.tolist() for i in logs_to_add.values]
         await write_data("Логи", data=l, sheet_data=past_logs, from_top=False)
-    print(l)
     return [len(l), errors]
-
-loop.run_until_complete(main())
