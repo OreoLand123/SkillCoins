@@ -5,6 +5,7 @@ from functions import read_data, write_data, clear_logs, clear_rates
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 import pandas as pd
+import asyncio
 
 
 async def main():
@@ -76,25 +77,38 @@ async def main():
 
     errors = groups_logs[groups_logs.diff_count < 0][['student', 'reason', 'diff_count']].values.tolist()
 
-    #-------------------CLOSE MONTH-------------------
-
-    try:
-        if datetime.today().month != pd.to_datetime(past_logs_df.date[0]).month:
-            amount_last_month = [[i[2]] for i in accounts]
-            await write_data("Аккаунты", data=amount_last_month, sheet_data=accounts_1, from_top=True)
-
-            history = await read_data("История")
-            await write_data('История', data=past_logs, sheet_data=history, from_top=False)
-
-            await clear_logs(past_logs)
-            await clear_rates(results)
-    except IndexError:
-        pass
-
-    #-------------------INSERT DATA-------------------
+        #-------------------INSERT DATA-------------------
 
     l = []
     if not logs_to_add.empty:
         l = [i.tolist() for i in logs_to_add.values]
         await write_data("Логи", data=l, sheet_data=past_logs, from_top=False)
+
+    #-------------------CLOSE MONTH-------------------
+
+    try:
+        if datetime.today().month != pd.to_datetime(past_logs_df.date[0]).month:
+            if not logs_to_add.empty:
+                all_logs = []
+                all_logs.append(past_logs_df)
+                all_logs.append(logs_to_add)
+                all_logs = pd.concat(all_logs)
+            else:
+                all_logs = past_logs_df
+            amount_last_month = [[i[2]] for i in accounts]
+            await write_data("Аккаунты", data=amount_last_month, sheet_data=accounts_1, from_top=True, is_updating=True)
+
+            history = await read_data("История")
+            await write_data('История', data=all_logs.values.tolist(), sheet_data=history, from_top=False)
+
+            await clear_logs(all_logs.values.tolist())
+            await clear_rates(results)
+    except IndexError:
+        pass
+
+
     return [len(l), errors]
+
+
+
+

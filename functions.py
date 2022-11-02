@@ -16,9 +16,10 @@ async def read_data(sheet_name):
     data = await api_client.GetClient().GetValuesAsync(MASTER_SPREADSHEET_ID, sheet_name)
     return data[2:]
 
-async def write_data(sheet_name, data, sheet_data=None, from_top=False):
+async def write_data(sheet_name, data, sheet_data=None, from_top=False, is_updating=False):
     start_row = 3 if from_top else 3 + len(sheet_data)
-    if sheet_name == "Копия":
+    final_row = 2 + len(sheet_data) if from_top else 999
+    if sheet_name == "Оценки":
         start_col, finish_col = "C", "L"
     elif sheet_name == "Аккаунты":
         start_col, finish_col = "D", "D"
@@ -26,8 +27,11 @@ async def write_data(sheet_name, data, sheet_data=None, from_top=False):
         start_col, finish_col = "A", "D"
     else:
         raise BaseException("Неизвестный лист")
-    range = f"{sheet_name}!{start_col}{start_row}:{finish_col}999"
-    await api_client.GetClient().AppendValuesAsync(id=MASTER_SPREADSHEET_ID, range=range, values=data)
+    range = f"{sheet_name}!{start_col}{start_row}:{finish_col}{final_row}"
+    if is_updating:
+        await api_client.GetClient().UpdateValuesAsync(id=MASTER_SPREADSHEET_ID, Range=range, InsertValues=data)
+    else:
+        await api_client.GetClient().AppendValuesAsync(id=MASTER_SPREADSHEET_ID, range=range, values=data)
 
 async def write_id(acc_id, acc_login, accounts_logins, sheet_name='Аккаунты'):
     row_num = accounts_logins.index(acc_login) + 3
@@ -36,12 +40,12 @@ async def write_id(acc_id, acc_login, accounts_logins, sheet_name='Аккаун�
 
 async def clear_logs(past_logs):
     f = [["", "", "", ""] for _ in past_logs]
-    await write_data("Логи", f, from_top=True)
+    await write_data("Логи", f, sheet_data=past_logs, from_top=True, is_updating=True)
 
 async def clear_rates(results):
     row_len = len(results[0][2:])
     minuses = [[" -"]*row_len for _ in results]
-    await write_data("Копия", minuses, from_top=True)
+    await write_data("Оценки", minuses, sheet_data=results, from_top=True, is_updating=True)
 
 loop = asyncio.get_event_loop()
 api_client = loop.run_until_complete(fun())
