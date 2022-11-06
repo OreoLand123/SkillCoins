@@ -5,7 +5,7 @@ import api_client
 import os
 import asyncio
 
-MASTER_SPREADSHEET_ID = None
+MASTER_SPREADSHEET_ID = "1oYSVwlNr2NZSB6i2pNHyKN0aW34Y50jldQgEKHUJiVw"
 BASE_DIR = os.path.dirname(os.path.abspath("__file__"))
 
 async def fun():

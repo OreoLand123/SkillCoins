@@ -1,0 +1,6 @@
+aiogram
+pandas
+httplib2
+google_auth_httplib2
+aiogoogle
+api_client

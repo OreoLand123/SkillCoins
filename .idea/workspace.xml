@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5f3354d8-1d1b-4ab7-81da-12c02c0db7e9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Procfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/update_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/parser/update_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/telegramm_bot/create_bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/telegramm_bot/create_bot.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
