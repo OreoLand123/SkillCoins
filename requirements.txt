@@ -4,3 +4,12 @@ httplib2
 google_auth_httplib2
 aiogoogle
 api_client
+google-api-core==2.10.1
+google-api-python-client==2.64.0
+google-auth==2.12.0
+google-auth-httplib2==0.1.0
+google-auth-oauthlib==0.5.3
+googleapis-common-protos==1.56.4
+keyboard==0.13.5
+h11==0.14.0
+aiofiles==22.1.0
