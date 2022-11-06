@@ -1,1 +1,1 @@
-web: python3 telebot_start.py
+web: python3 telegramm_bot\telebot_start.py
