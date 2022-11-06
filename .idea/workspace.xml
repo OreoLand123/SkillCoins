@@ -31,7 +31,7 @@
       <recent name="C:\skillbox\SkillCoins" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.telebot">
+  <component name="RunManager" selected="Python.telebot_start">
     <configuration name="api_client" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="SkillCoins" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -74,7 +74,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="telebot" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="telebot_start" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="SkillCoins" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -86,7 +86,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/telegramm_bot/telebot.py" />
+      <option name="SCRIPT_NAME" value="F:\SkillCoins\telegramm_bot\telebot_start.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -139,7 +139,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.telebot" />
+        <item itemvalue="Python.telebot_start" />
         <item itemvalue="Python.update_data" />
         <item itemvalue="Python.script" />
         <item itemvalue="Python.test (1)" />
@@ -170,7 +170,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667751524156</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Деплой">
+      <created>1667751904777</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1667751904777</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
